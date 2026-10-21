@@ -1,0 +1,1591 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Masterclass: Ética de la IA</title>
+  <style>
+    :root {
+      --bg: #0f1419;
+      --panel: #1a2332;
+      --panel-hover: #243044;
+      --accent: #3d8bfd;
+      --accent-soft: rgba(61, 139, 253, 0.15);
+      --text: #e8eef6;
+      --muted: #8b9bb4;
+      --border: #2a3648;
+      --session: #5eead4;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: 100vh;
+    }
+
+    /* —— Menú lateral —— */
+    .sidebar {
+      background: var(--panel);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      max-height: 100vh;
+      position: sticky;
+      top: 0;
+    }
+
+    .sidebar-header {
+      padding: 1.25rem 1.25rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sidebar-header h1 {
+      font-size: 1rem;
+      font-weight: 600;
+      line-height: 1.35;
+    }
+
+    .sidebar-header p {
+      margin-top: 0.35rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .nav {
+      overflow-y: auto;
+      flex: 1;
+      padding: 0.75rem 0.5rem 1.5rem;
+    }
+
+    .session-label {
+      display: block;
+      padding: 0.85rem 0.75rem 0.35rem;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--session);
+    }
+
+    .nav-item {
+      display: block;
+      width: 100%;
+      text-align: left;
+      border: none;
+      background: transparent;
+      color: var(--text);
+      padding: 0.55rem 0.75rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      line-height: 1.3;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .nav-item:hover {
+      background: var(--panel-hover);
+    }
+
+    .nav-item.active {
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .nav-item .num {
+      display: inline-block;
+      min-width: 1.4em;
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .nav-item.active .num {
+      color: var(--accent);
+    }
+
+    /* —— Contenido —— */
+    .main {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      min-width: 0;
+    }
+
+    .section {
+      display: none;
+      flex: 1;
+      padding: 2.5rem 3rem 6rem;
+      max-width: 72rem;
+      font-size: 1.25rem;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-meta {
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .section-meta .session-tag {
+      color: var(--session);
+    }
+
+    .section h2 {
+      font-size: 2.6rem;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 1.75rem;
+    }
+
+    .section ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .section li {
+      position: relative;
+      padding: 0.8rem 0 0.8rem 1.6rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 1.3rem;
+      line-height: 1.6;
+      color: #c5d0e0;
+    }
+
+    .section li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 1.35rem;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .section li:last-child {
+      border-bottom: none;
+    }
+
+    .section .empty {
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    /* —— Perfil del ponente —— */
+    .profile {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 2.5rem;
+      align-items: start;
+    }
+
+    .profile-photo {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+      object-position: top center;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+      display: block;
+    }
+
+    .profile-role {
+      margin-top: 1rem;
+      text-align: center;
+      font-size: 1rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .profile-role strong {
+      display: block;
+      color: var(--text);
+      font-size: 1.1rem;
+    }
+
+    .profile-body h3 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--session);
+      margin: 1.4rem 0 0.6rem;
+    }
+
+    .profile-body h3:first-child { margin-top: 0; }
+
+    .profile-body p {
+      font-size: 1.3rem;
+      line-height: 1.65;
+      color: #c5d0e0;
+      margin-bottom: 1rem;
+    }
+
+    .profile-highlights {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1.25rem;
+    }
+
+    .profile-highlights span {
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid rgba(61, 139, 253, 0.35);
+      padding: 0.45rem 0.85rem;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    /* —— Tarjetas academicas con logos —— */
+    .academic-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+      margin: 1.25rem 0 0.5rem;
+    }
+
+    .academic-card {
+      background: #ffffff;
+      color: #1a2332;
+      border-radius: 14px;
+      padding: 1.1rem 1rem 1rem;
+      text-align: center;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    }
+
+    .academic-logo {
+      height: 84px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .academic-logo img {
+      max-height: 84px;
+      max-width: 100%;
+      object-fit: contain;
+    }
+
+    .academic-card strong {
+      display: block;
+      font-size: 1rem;
+      line-height: 1.3;
+      margin-bottom: 0.35rem;
+    }
+
+    .academic-card span {
+      display: block;
+      font-size: 0.92rem;
+      line-height: 1.4;
+      color: #44506a;
+    }
+
+    @media (max-width: 900px) {
+      .academic-grid { grid-template-columns: 1fr; }
+      .academic-logo, .academic-logo img { height: 64px; max-height: 64px; }
+    }
+
+    @media (max-width: 640px) {
+      .profile { grid-template-columns: 1fr; }
+      .profile-photo { max-width: 260px; margin: 0 auto; }
+    }
+
+    /* —— Temas a tratar (Seccion 2) —— */
+    .topic-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.25rem;
+      margin-top: 0.5rem;
+    }
+
+    .topic-card {
+      display: block;
+      width: 100%;
+      text-align: left;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      overflow: hidden;
+      cursor: pointer;
+      color: var(--text);
+      font: inherit;
+      padding: 0;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .topic-card:hover,
+    .topic-card:focus-visible {
+      transform: translateY(-6px);
+      border-color: var(--accent);
+      box-shadow: 0 18px 36px rgba(0, 0, 0, 0.4);
+      outline: none;
+    }
+
+    .topic-media {
+      position: relative;
+      height: 190px;
+      overflow: hidden;
+    }
+
+    .topic-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.35s ease;
+    }
+
+    .topic-card:hover .topic-media img { transform: scale(1.06); }
+
+    .topic-media::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 35%, rgba(15, 20, 25, 0.75));
+    }
+
+    .topic-num {
+      position: absolute;
+      left: 1rem;
+      bottom: 0.75rem;
+      z-index: 1;
+      font-size: 2rem;
+      font-weight: 800;
+      color: #fff;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+    }
+
+    .topic-body { padding: 1.25rem 1.25rem 1.4rem; }
+
+    .topic-body h3 {
+      font-size: 1.45rem;
+      font-weight: 700;
+      line-height: 1.25;
+      margin-bottom: 0.6rem;
+    }
+
+    .topic-body p {
+      font-size: 1.05rem;
+      line-height: 1.55;
+      color: var(--muted);
+    }
+
+    .topic-link {
+      display: inline-block;
+      margin-top: 0.9rem;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    @media (max-width: 1000px) {
+      .topic-grid { grid-template-columns: 1fr; }
+      .topic-media { height: 210px; }
+    }
+
+    /* —— Imagen + concepto (apertura de cada tema) —— */
+    .topic-hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      overflow: hidden;
+      margin: 0.5rem 0 2rem;
+      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .topic-hero-media { min-height: 300px; }
+
+    .topic-hero-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .topic-hero.reverse .topic-hero-media { order: 2; }
+
+    .topic-hero-body {
+      padding: 2rem;
+      align-self: center;
+    }
+
+    .topic-hero-eyebrow {
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--session);
+      margin-bottom: 0.7rem;
+    }
+
+    .topic-hero-body h3 {
+      font-size: 1.7rem;
+      font-weight: 700;
+      line-height: 1.25;
+      margin-bottom: 0.9rem;
+    }
+
+    .topic-hero-body p {
+      font-size: 1.15rem;
+      line-height: 1.65;
+      color: #c5d0e0;
+    }
+
+    @media (max-width: 900px) {
+      .topic-hero { grid-template-columns: 1fr; }
+      .topic-hero.reverse .topic-hero-media { order: 0; }
+      .topic-hero-media { min-height: 0; height: 220px; }
+      .topic-hero-body { padding: 1.5rem; }
+    }
+
+    /* —— Ejemplos (Seccion 4) —— */
+    .example-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.25rem;
+      margin-top: 0.5rem;
+    }
+
+    .example-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-top: 4px solid var(--accent);
+      border-radius: 16px;
+      padding: 1.6rem 1.6rem 1.4rem;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+    }
+
+    .example-card:nth-child(2) { border-top-color: var(--session); }
+
+    .example-eyebrow {
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+    }
+
+    .example-card:nth-child(2) .example-eyebrow { color: var(--session); }
+
+    .example-card h3 {
+      font-size: 1.55rem;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 1.1rem;
+    }
+
+    .example-block { margin-bottom: 1.05rem; }
+    .example-block:last-child { margin-bottom: 0; }
+
+    .example-block h4 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--session);
+      margin-bottom: 0.4rem;
+    }
+
+    .example-card:nth-child(2) .example-block h4 { color: var(--accent); }
+
+    .example-block p,
+    .example-block li {
+      font-size: 1.08rem;
+      line-height: 1.6;
+      color: #c5d0e0;
+    }
+
+    .example-block ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .example-block li {
+      position: relative;
+      padding: 0.2rem 0 0.2rem 1.25rem;
+      border: none;
+    }
+
+    .example-block li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.75rem;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .example-card:nth-child(2) .example-block li::before { background: var(--session); }
+
+    .example-debate {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0.9rem 1rem;
+    }
+
+    .example-debate p { margin-bottom: 0.4rem; }
+    .example-debate p:last-child { margin-bottom: 0; }
+
+    @media (max-width: 900px) {
+      .example-grid { grid-template-columns: 1fr; }
+    }
+
+    /* —— Dilemas mundiales (Seccion 4) —— */
+    .dilemma-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.25rem;
+      align-items: start;
+    }
+
+    .dilemma-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .dilemma-media { position: relative; }
+
+    .dilemma-media img {
+      width: 100%;
+      height: 230px;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+
+    .dilemma-badge {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      background: rgba(15, 20, 25, 0.82);
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      padding: 0.4rem 0.75rem;
+      border-radius: 999px;
+      backdrop-filter: blur(4px);
+    }
+
+    .dilemma-body { padding: 1.6rem 1.6rem 1.5rem; }
+
+    .dilemma-body h3 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 1rem;
+    }
+
+    .dilemma-body h4 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--session);
+      margin: 1.15rem 0 0.45rem;
+    }
+
+    .dilemma-body h4:first-of-type { margin-top: 0; }
+
+    .dilemma-body p,
+    .dilemma-body li {
+      font-size: 1.08rem;
+      line-height: 1.6;
+      color: #c5d0e0;
+    }
+
+    .dilemma-question {
+      background: rgba(61, 139, 253, 0.1);
+      border: 1px solid rgba(61, 139, 253, 0.35);
+      border-radius: 12px;
+      padding: 1rem 1.1rem;
+      margin-top: 1.15rem;
+    }
+
+    .dilemma-question h4 { margin-top: 0; color: var(--accent); }
+
+    .dilemma-body ul { list-style: none; padding: 0; }
+
+    .dilemma-body li {
+      position: relative;
+      padding: 0.3rem 0 0.3rem 1.3rem;
+    }
+
+    .dilemma-body li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.85rem;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .dilemma-note {
+      margin-top: 1.15rem;
+      font-size: 1rem;
+      line-height: 1.6;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      padding-top: 1rem;
+    }
+
+    .dilemma-note strong { color: #c5d0e0; }
+
+    .dilemma-principle {
+      display: block;
+      margin-top: 1rem;
+      background: rgba(94, 234, 212, 0.1);
+      border: 1px solid rgba(94, 234, 212, 0.4);
+      color: var(--session);
+      border-radius: 12px;
+      padding: 0.85rem 1rem;
+      font-size: 1rem;
+      line-height: 1.55;
+    }
+
+    @media (max-width: 900px) {
+      .dilemma-grid { grid-template-columns: 1fr; }
+      .dilemma-media img { height: 210px; }
+    }
+
+    /* —— Desplegable de cada dilema (cerrado por defecto) —— */
+    .dilemma-more {
+      margin-top: 1.15rem;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.03);
+      overflow: hidden;
+    }
+
+    .dilemma-more summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 0.95rem 1.1rem;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      user-select: none;
+    }
+
+    .dilemma-more summary::-webkit-details-marker { display: none; }
+
+    .dilemma-more summary::after {
+      content: "▾";
+      font-size: 1.1rem;
+      transition: transform 0.25s ease;
+    }
+
+    .dilemma-more[open] summary::after { transform: rotate(180deg); }
+
+    .dilemma-more summary:hover { color: var(--text); }
+
+    .dilemma-more-content {
+      padding: 0 1.1rem 1.15rem;
+      animation: fadeIn 0.25s ease;
+    }
+
+    /* —— Ejercicio practico (Seccion 5) —— */
+    .exercise-case {
+      position: relative;
+      background: linear-gradient(135deg, rgba(61, 139, 253, 0.16), rgba(94, 234, 212, 0.08));
+      border: 1px solid rgba(61, 139, 253, 0.4);
+      border-left: 5px solid var(--accent);
+      border-radius: 16px;
+      padding: 1.8rem 2rem 1.8rem 4.2rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .exercise-case-icon {
+      position: absolute;
+      left: 1.4rem;
+      top: 1.7rem;
+      font-size: 1.8rem;
+      line-height: 1;
+    }
+
+    .exercise-eyebrow {
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--session);
+      margin-bottom: 0.7rem;
+    }
+
+    .exercise-case-text {
+      font-size: 1.35rem;
+      line-height: 1.65;
+      font-style: italic;
+      color: var(--text);
+    }
+
+    .exercise-steps {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .exercise-step {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem 1.1rem;
+    }
+
+    .exercise-step-num {
+      flex: none;
+      width: 2.4rem;
+      height: 2.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: var(--accent-soft);
+      border: 1px solid rgba(61, 139, 253, 0.45);
+      color: var(--accent);
+      font-weight: 800;
+      font-size: 1.05rem;
+    }
+
+    .exercise-step p {
+      font-size: 1.02rem;
+      line-height: 1.45;
+      color: #c5d0e0;
+    }
+
+    .exercise-questions-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .exercise-questions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .exercise-question {
+      display: flex;
+      gap: 1rem;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.3rem 1.35rem;
+      transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .exercise-question:hover {
+      border-color: var(--accent);
+      transform: translateY(-3px);
+    }
+
+    .exercise-question-num {
+      flex: none;
+      font-size: 1.9rem;
+      font-weight: 800;
+      line-height: 1;
+      color: var(--accent);
+      opacity: 0.85;
+    }
+
+    .exercise-question:nth-child(even) .exercise-question-num { color: var(--session); }
+
+    .exercise-question p {
+      font-size: 1.18rem;
+      line-height: 1.55;
+      color: var(--text);
+      align-self: center;
+    }
+
+    .exercise-closing {
+      text-align: center;
+      background: var(--panel);
+      border: 1px dashed rgba(94, 234, 212, 0.45);
+      border-radius: 14px;
+      padding: 1.4rem 2rem;
+      font-size: 1.12rem;
+      line-height: 1.65;
+      color: #c5d0e0;
+    }
+
+    .exercise-closing strong { color: var(--session); }
+
+    @media (max-width: 900px) {
+      .exercise-steps, .exercise-questions { grid-template-columns: 1fr; }
+      .exercise-case { padding: 1.5rem 1.4rem 1.5rem 3.6rem; }
+      .exercise-case-text { font-size: 1.18rem; }
+    }
+
+    /* —— Controles inferior —— */
+    .controls {
+      position: sticky;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem 3rem;
+      background: linear-gradient(transparent, var(--bg) 30%);
+      border-top: 1px solid var(--border);
+    }
+
+    .controls button {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.6rem 1.1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .controls button:hover:not(:disabled) {
+      background: var(--panel-hover);
+      border-color: var(--accent);
+    }
+
+    .controls button:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .controls .progress {
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .menu-toggle {
+      display: none;
+      position: fixed;
+      top: 0.75rem;
+      left: 0.75rem;
+      z-index: 20;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.5rem 0.75rem;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 800px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .menu-toggle { display: block; }
+
+      .sidebar {
+        position: fixed;
+        inset: 0 auto 0 0;
+        width: min(300px, 88vw);
+        z-index: 30;
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+        box-shadow: 4px 0 24px rgba(0,0,0,0.4);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 25;
+      }
+
+      .overlay.show { display: block; }
+
+      .section {
+        padding: 4rem 1.25rem 5rem;
+      }
+
+      .controls {
+        padding: 0.85rem 1.25rem;
+      }
+
+      .section h2 { font-size: 1.9rem; }
+      .section { font-size: 1.1rem; }
+      .section li { font-size: 1.15rem; }
+      .profile-body p { font-size: 1.15rem; }
+    }
+  </style>
+</head>
+<body>
+  <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">☰ Menú</button>
+  <div class="overlay" id="overlay"></div>
+
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h1>Masterclass: Ética de la IA</h1>
+        <p>Universidad de los Andes · Colombia</p>
+      </div>
+      <nav class="nav" id="nav" aria-label="Secciones por sesión"></nav>
+    </aside>
+
+    <div class="main">
+      <article class="section" data-section="1" data-session="portada">
+        <p class="section-meta"><span class="session-tag">Portada</span> · Sección 1 de 13</p>
+        <h2>Perfil académico y profesional</h2>
+        <div class="profile">
+          <figure>
+            <img class="profile-photo" src="assets/ponente.jpg" alt="Foto del ponente" />
+            <figcaption class="profile-role">
+              <strong>Coordinador de Calidad del Servicio T&amp;D</strong>
+              CENS S.A. E.S.P.
+            </figcaption>
+          </figure>
+          <div class="profile-body">
+            <h3>Formación</h3>
+            <p>Ingeniero de Sistemas, Especialista en Gestión y Evaluación de Proyectos de la <strong>Universidad Industrial de Santander (UIS)</strong> y Científico de Datos de la <strong>Pontificia Universidad Javeriana Cali</strong>.</p>
+            <p>Maestrante en Inteligencia Artificial de la <strong>Universidad de los Andes</strong>.</p>
+            <h3>Trayectoria</h3>
+            <p>Cuenta con más de 10 años de experiencia en gestión regulatoria, calidad del servicio, optimización de procesos mediante inteligencia artificial y desarrollo de aplicaciones en CENS S.A. E.S.P.</p>
+            <p>Actualmente, se desempeña como Coordinador de Calidad del Servicio T&amp;D en CENS.</p>
+            <div class="profile-highlights">
+              <span>+10 años de experiencia</span>
+              <span>Inteligencia Artificial</span>
+              <span>Calidad del servicio</span>
+              <span>Gestión regulatoria</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="academic-grid">
+          <div class="academic-card">
+            <div class="academic-logo"><img src="assets/logos/uis.png" alt="Logo de la Universidad Industrial de Santander" /></div>
+            <strong>Universidad Industrial de Santander</strong>
+            <span>Especialista en Gestión y Evaluación de Proyectos</span>
+          </div>
+          <div class="academic-card">
+            <div class="academic-logo"><img src="assets/logos/javeriana.png" alt="Logo de la Pontificia Universidad Javeriana" /></div>
+            <strong>Pontificia Universidad Javeriana Cali</strong>
+            <span>Científico de Datos</span>
+          </div>
+          <div class="academic-card">
+            <div class="academic-logo"><img src="assets/logos/uniandes.png" alt="Logo de la Universidad de los Andes" /></div>
+            <strong>Universidad de los Andes</strong>
+            <span>Maestrante en Inteligencia Artificial</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="section" data-section="2" data-session="portada">
+        <p class="section-meta"><span class="session-tag">Portada</span> · Sección 2 de 13</p>
+        <h2>Navegando el futuro tecnológico con responsabilidad y justicia algorítmica</h2>
+        <div class="topic-grid">
+          <button type="button" class="topic-card" data-goto="3" aria-label="Ir a Dilemas Éticos">
+            <div class="topic-media">
+              <img src="assets/temas/dilemas-eticos.jpg" alt="Estatua de la Justicia sosteniendo una balanza" />
+              <span class="topic-num">01</span>
+            </div>
+            <div class="topic-body">
+              <h3>Dilemas Éticos</h3>
+              <p>Cuando decidir bien no es lo mismo que decidir rápido: valores en conflicto detrás de cada decisión automatizada.</p>
+              <span class="topic-link">Explorar el tema →</span>
+            </div>
+          </button>
+          <button type="button" class="topic-card" data-goto="6" aria-label="Ir a Sesgo Algorítmico">
+            <div class="topic-media">
+              <img src="assets/temas/sesgo-algoritmico.jpg" alt="Código de programación en una pantalla" />
+              <span class="topic-num">02</span>
+            </div>
+            <div class="topic-body">
+              <h3>Sesgo Algorítmico</h3>
+              <p>Los datos heredan las desigualdades históricas y los modelos pueden amplificarlas si no se auditan.</p>
+              <span class="topic-link">Explorar el tema →</span>
+            </div>
+          </button>
+          <button type="button" class="topic-card" data-goto="8" aria-label="Ir a Explicabilidad y Gobernanza">
+            <div class="topic-media">
+              <img src="assets/temas/explicabilidad-gobernanza.jpg" alt="Edificios corporativos de cristal vistos desde abajo" />
+              <span class="topic-num">03</span>
+            </div>
+            <div class="topic-body">
+              <h3>Explicabilidad y Gobernanza</h3>
+              <p>Abrir la caja negra: transparencia, responsabilidad y reglas claras para una IA confiable.</p>
+              <span class="topic-link">Explorar el tema →</span>
+            </div>
+          </button>
+        </div>
+      </article>
+
+      <article class="section" data-section="3" data-session="dilemas">
+        <p class="section-meta"><span class="session-tag">Dilemas éticos</span> · Sección 3 de 13</p>
+        <h2>¿Qué es un dilema ético?</h2>
+        <div class="topic-hero">
+          <div class="topic-hero-media">
+            <img src="assets/temas/dilemas-eticos.jpg" alt="Estatua de la Justicia sosteniendo una balanza" />
+          </div>
+          <div class="topic-hero-body">
+            <p class="topic-hero-eyebrow">01 · Dilemas Éticos</p>
+            <h3>Cuando los valores entran en conflicto</h3>
+            <p>Un dilema ético surge cuando dos valores legítimos —como la eficiencia y la equidad— apuntan en direcciones opuestas, y cualquier decisión implica renunciar a algo importante. No hay una respuesta puramente técnica: alguien debe definir los criterios, asumir el costo y responder por las consecuencias.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="section" data-section="4" data-session="dilemas">
+        <p class="section-meta"><span class="session-tag">Dilemas éticos</span> · Sección 4 de 13</p>
+        <h2>Ejemplos</h2>
+        <div class="dilemma-grid">
+          <div class="dilemma-card">
+            <div class="dilemma-media">
+              <img src="assets/ejemplos/coche-autonomo.png" alt="Ilustración de un coche autónomo que debe elegir entre seguir recto y atropellar peatones o desviarse hacia una barrera" />
+              <span class="dilemma-badge">Ejemplo 1</span>
+            </div>
+            <div class="dilemma-body">
+              <h3>El dilema del coche autónomo: ¿a quién debe salvar la IA?</h3>
+              <h4>Dilema</h4>
+              <p>Un vehículo autónomo sufre una falla en los frenos y debe elegir entre dos alternativas que implican consecuencias mortales: continuar su trayectoria y atropellar a varios peatones, o desviarse y poner en peligro a sus pasajeros.</p>
+              <div class="dilemma-question">
+                <h4>La pregunta es</h4>
+                <p>¿Cómo debería programarse la inteligencia artificial para tomar esa decisión?</p>
+              </div>
+              <details class="dilemma-more">
+                <summary>Preguntas y principio ético</summary>
+                <div class="dilemma-more-content">
+                  <ul>
+                    <li>¿Debe priorizar la vida de los peatones o la de los pasajeros?</li>
+                    <li>¿Debe intentar salvar al mayor número de personas?</li>
+                    <li>¿Es correcto que un algoritmo tome una decisión de vida o muerte?</li>
+                    <li>¿Quién es responsable: el fabricante, el programador o el propietario?</li>
+                  </ul>
+                  <p class="dilemma-note">Este dilema se hizo especialmente conocido gracias al experimento <strong>Moral Machine del MIT</strong>, que se volvió viral al permitir que personas de todo el mundo respondieran escenarios morales relacionados con vehículos autónomos.</p>
+                  <span class="dilemma-principle"><strong>Principio ético en discusión:</strong> el valor de la vida humana, la responsabilidad y la toma de decisiones morales automatizadas.</span>
+                </div>
+              </details>
+            </div>
+          </div>
+          <div class="dilemma-card">
+            <div class="dilemma-media">
+              <img src="assets/ejemplos/ia-discriminatoria.png" alt="Ilustración de reconocimiento facial aplicado a rostros de distintas personas" />
+              <span class="dilemma-badge">Ejemplo 2</span>
+            </div>
+            <div class="dilemma-body">
+              <h3>La IA discriminatoria: ¿puede un algoritmo ser injusto?</h3>
+              <h4>Dilema</h4>
+              <p>Una empresa o institución utiliza inteligencia artificial para seleccionar candidatos a un empleo, conceder créditos o identificar personas mediante reconocimiento facial. Sin embargo, el sistema produce resultados menos precisos o más desfavorables para determinados grupos de personas.</p>
+              <div class="dilemma-question">
+                <h4>La pregunta es</h4>
+                <p>¿Es ético confiar en una IA que parece objetiva, pero que puede reproducir los prejuicios humanos?</p>
+              </div>
+              <details class="dilemma-more">
+                <summary>Preguntas y principio ético</summary>
+                <div class="dilemma-more-content">
+                  <ul>
+                    <li>¿Quién responde si el algoritmo discrimina?</li>
+                    <li>¿Es suficiente que el sistema sea preciso en promedio si perjudica a ciertos grupos?</li>
+                    <li>¿Debe una empresa utilizar una IA que toma decisiones más rápido, pero no puede explicar claramente sus resultados?</li>
+                    <li>¿Cómo se garantiza que las decisiones sean justas?</li>
+                  </ul>
+                  <span class="dilemma-principle"><strong>Principio ético en discusión:</strong> la justicia, la equidad y la no discriminación algorítmica.</span>
+                </div>
+              </details>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="section" data-section="5" data-session="dilemas">
+        <p class="section-meta"><span class="session-tag">Dilemas éticos</span> · Sección 5 de 13</p>
+        <h2>Ejercicio práctico</h2>
+
+        <div class="exercise-case">
+          <span class="exercise-case-icon" aria-hidden="true">⚡</span>
+          <p class="exercise-eyebrow">El caso · CENS</p>
+          <p class="exercise-case-text">“Una IA identifica que las inversiones en zonas rurales generan poco retorno económico y recomienda reducirlas para invertir en zonas urbanas con mayor rentabilidad. La decisión mejora los indicadores financieros de la empresa, pero aumenta la brecha en la calidad del servicio entre las zonas urbanas y rurales.”</p>
+        </div>
+
+        <div class="exercise-steps">
+          <div class="exercise-step">
+            <span class="exercise-step-num">1</span>
+            <p><strong>Lee el caso</strong> e identifica la decisión que propone la IA.</p>
+          </div>
+          <div class="exercise-step">
+            <span class="exercise-step-num">2</span>
+            <p><strong>Debate en grupo</strong> las preguntas que vienen a continuación.</p>
+          </div>
+          <div class="exercise-step">
+            <span class="exercise-step-num">3</span>
+            <p><strong>Propón los principios</strong> que deberían guiar al algoritmo.</p>
+          </div>
+        </div>
+
+        <h3 class="exercise-questions-title">Preguntas para la audiencia</h3>
+        <div class="exercise-questions">
+          <div class="exercise-question">
+            <span class="exercise-question-num">1</span>
+            <p>¿Debe prevalecer la eficiencia económica o la equidad en el servicio?</p>
+          </div>
+          <div class="exercise-question">
+            <span class="exercise-question-num">2</span>
+            <p>¿Quién es responsable de la decisión: la IA o los directivos?</p>
+          </div>
+          <div class="exercise-question">
+            <span class="exercise-question-num">3</span>
+            <p>¿Debería existir siempre revisión humana?</p>
+          </div>
+          <div class="exercise-question">
+            <span class="exercise-question-num">4</span>
+            <p>¿Qué principios éticos deberían programarse en el algoritmo?</p>
+          </div>
+        </div>
+
+        <div class="exercise-closing">
+          Este caso enfrenta directamente <strong>rentabilidad, inclusión, responsabilidad y servicio público</strong>: cuatro temas centrales del sector eléctrico.
+        </div>
+      </article>
+
+      <article class="section" data-section="6" data-session="sesgo">
+        <p class="section-meta"><span class="session-tag">Sesgo algorítmico</span> · Sección 6 de 13</p>
+        <h2>Sesgo algorítmico</h2>
+        <div class="topic-hero reverse">
+          <div class="topic-hero-media">
+            <img src="assets/temas/sesgo-algoritmico.jpg" alt="Código de programación en una pantalla" />
+          </div>
+          <div class="topic-hero-body">
+            <p class="topic-hero-eyebrow">02 · Sesgo Algorítmico</p>
+            <h3>Lo que los datos ya traen</h3>
+            <p>El sesgo no nace en el algoritmo: viene de los datos con los que aprende. Si la historia registra desigualdades, el modelo puede repetirlas a gran escala y con apariencia de objetividad. Por eso no basta con entrenar bien: hay que auditar los datos, los resultados y a quiénes afectan.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="section" data-section="7" data-session="sesgo">
+        <p class="section-meta"><span class="session-tag">Sesgo algorítmico</span> · Sección 7 de 13</p>
+        <h2>Ejemplos</h2>
+        <div class="dilemma-grid">
+          <div class="dilemma-card">
+            <div class="dilemma-media">
+              <img src="assets/ejemplos/google-photos-reconocimiento.jpg" alt="Retrato en silueta de una mujer de perfil" />
+              <span class="dilemma-badge">Ejemplo 1</span>
+            </div>
+            <div class="dilemma-body">
+              <p class="example-eyebrow">Ejemplo 1 · Google Photos, 2015</p>
+              <h3>Personas de color etiquetadas como simios</h3>
+              <h4>Qué pasó</h4>
+              <p>El sistema de reconocimiento de imágenes de Google Photos etiquetó automáticamente las fotos de dos personas negras con la palabra <strong>“gorilas”</strong>. El error se hizo viral cuando una de las personas afectadas lo publicó, y Google tuvo que disculparse públicamente y retirar esa etiqueta de su sistema.</p>
+              <h4>Por qué ocurrió</h4>
+              <p>El modelo se había entrenado con datos poco diversos y no se había probado lo suficiente con distintos tonos de piel: el algoritmo no “veía” a todas las personas con la misma precisión.</p>
+              <span class="dilemma-principle"><strong>Lección:</strong> si los datos de entrenamiento no representan a toda la población, el sistema discrimina — aunque nadie lo haya programado para hacerlo.</span>
+            </div>
+          </div>
+          <div class="dilemma-card">
+            <div class="dilemma-media">
+              <img src="assets/ejemplos/amazon-contratacion.jpg" alt="Mujer profesional con un portátil en una oficina" style="object-position: top center;" />
+              <span class="dilemma-badge">Ejemplo 2</span>
+            </div>
+            <div class="dilemma-body">
+              <p class="example-eyebrow">Ejemplo 2 · Amazon, 2018</p>
+              <h3>La IA de contratación que penalizaba a las mujeres</h3>
+              <h4>Qué pasó</h4>
+              <p>Amazon entrenó una herramienta de inteligencia artificial con las hojas de vida recibidas durante 10 años —en su mayoría de hombres— para automatizar la selección de personal. El sistema aprendió ese patrón y empezó a <strong>rebajar la calificación de los currículums de mujeres</strong>, incluso penalizando la palabra “mujeres” en el texto. Amazon terminó abandonando el proyecto.</p>
+              <h4>Por qué ocurrió</h4>
+              <p>Los datos históricos reflejaban una desigualdad previa en la contratación tecnológica, y el modelo la convirtió en una regla automática de decisión.</p>
+              <span class="dilemma-principle"><strong>Lección:</strong> entrenar con datos del pasado sin auditarlos hace que la IA reproduzca y amplifique las desigualdades históricas.</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="section" data-section="8" data-session="sesgo">
+        <p class="section-meta"><span class="session-tag">Sesgo algorítmico</span> · Sección 8 de 13</p>
+        <h2>Ejercicio práctico</h2>
+
+        <div class="exercise-case">
+          <span class="exercise-case-icon" aria-hidden="true">⚡</span>
+          <p class="exercise-eyebrow">El caso · Empresa de energía eléctrica (CENS)</p>
+          <p class="exercise-case-text">“Una empresa de energía eléctrica entrena un modelo de IA con su historial de pagos para predecir qué clientes tienen mayor riesgo de no pagar la factura. Como en los datos las zonas rurales y los barrios de estratos bajos registran más atrasos, el modelo aprende ese patrón y empieza a marcar automáticamente a esos usuarios como ‘alto riesgo’, priorizando los cortes del servicio y endureciendo las condiciones de financiación justo en las comunidades más vulnerables.”</p>
+        </div>
+
+        <div class="exercise-steps">
+          <div class="exercise-step">
+            <span class="exercise-step-num">1</span>
+            <p><strong>Identifica el origen</strong> del sesgo: ¿está en los datos, en el modelo o en su uso?</p>
+          </div>
+          <div class="exercise-step">
+            <span class="exercise-step-num">2</span>
+            <p><strong>Debate en grupo</strong> las preguntas que vienen a continuación.</p>
+          </div>
+          <div class="exercise-step">
+            <span class="exercise-step-num">3</span>
+            <p><strong>Propón salvaguardas</strong> para detectar y corregir el sesgo.</p>
+          </div>
+        </div>
+
+        <h3 class="exercise-questions-title">Preguntas para la audiencia</h3>
+        <div class="exercise-questions">
+          <div class="exercise-question">
+            <span class="exercise-question-num">1</span>
+            <p>¿El algoritmo crea la discriminación o solo refleja la que ya existía en los datos?</p>
+          </div>
+          <div class="exercise-question">
+            <span class="exercise-question-num">2</span>
+            <p>¿Quién es responsable del resultado: los datos, quien entrenó el modelo o quien lo usa?</p>
+          </div>
+          <div class="exercise-question">
+            <span class="exercise-question-num">3</span>
+            <p>¿Qué métricas de equidad por zona y estrato deberían medirse antes de poner el sistema en producción?</p>
+          </div>
+          <div class="exercise-question">
+            <span class="exercise-question-num">4</span>
+            <p>¿Es suficiente con quitar la ubicación o el estrato de los datos para que el modelo deje de discriminar?</p>
+          </div>
+        </div>
+
+        <div class="exercise-closing">
+          Un modelo preciso en promedio puede seguir siendo <strong>injusto</strong> con las comunidades más vulnerables: en un servicio público esencial como la energía, la equidad se diseña, se mide y se audita, no se asume.
+        </div>
+      </article>
+
+      <article class="section" data-section="9" data-session="explicabilidad">
+        <p class="section-meta"><span class="session-tag">Explicabilidad y gobernanza</span> · Sección 9 de 13</p>
+        <h2>Explicabilidad y gobernanza</h2>
+        <div class="topic-hero">
+          <div class="topic-hero-media">
+            <img src="assets/temas/explicabilidad-gobernanza.jpg" alt="Edificios corporativos de cristal vistos desde abajo" />
+          </div>
+          <div class="topic-hero-body">
+            <p class="topic-hero-eyebrow">03 · Explicabilidad y Gobernanza</p>
+            <h3>Entender para poder responder</h3>
+            <p>Una decisión que nadie puede explicar tampoco se puede impugnar ni corregir. La explicabilidad abre la caja negra, y la gobernanza pone las reglas: quién decide, quién supervisa y quién responde cuando el sistema se equivoca. Sin ambas, no hay confianza posible.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="section" data-section="10" data-session="explicabilidad">
+        <p class="section-meta"><span class="session-tag">Explicabilidad y gobernanza</span> · Sección 10 de 13</p>
+        <h2>Ejemplos</h2>
+        <div class="dilemma-grid">
+          <div class="dilemma-card">
+            <div class="dilemma-media">
+              <img src="assets/ejemplos/caja-negra-justicia.jpg" alt="Estatua de la Justicia con balanza y espada" style="object-position: center 25%;" />
+              <span class="dilemma-badge">Ejemplo 1</span>
+            </div>
+            <div class="dilemma-body">
+              <p class="example-eyebrow">Ejemplo 1 · COMPAS, Estados Unidos</p>
+              <h3>El puntaje de riesgo que nadie podía explicar</h3>
+              <h4>Qué pasó</h4>
+              <p>Tribunales de Estados Unidos empezaron a usar <strong>COMPAS</strong>, un programa comercial que asigna a cada acusado un puntaje de riesgo de volver a delinquir, y que los jueces podían tener en cuenta al decidir una condena.</p>
+              <details class="dilemma-more">
+                <summary>Por qué era una caja negra</summary>
+                <div class="dilemma-more-content">
+                  <p>La fórmula del puntaje era un <strong>secreto comercial</strong> de la empresa dueña del software. Cuando el acusado Eric Loomis pidió saber cómo se había calculado su “alto riesgo”, no se le permitió conocerlo: ni él, ni su defensa, ni el propio juez podían explicar qué factores pesaron ni cuánto.</p>
+                  <span class="dilemma-principle"><strong>El problema:</strong> una decisión que afecta la libertad de una persona no podía ser explicada, cuestionada ni auditada por nadie.</span>
+                </div>
+              </details>
+            </div>
+          </div>
+          <div class="dilemma-card">
+            <div class="dilemma-media">
+              <img src="assets/ejemplos/caja-negra-salud.jpg" alt="Médico con estetoscopio consultando un dispositivo" />
+              <span class="dilemma-badge">Ejemplo 2</span>
+            </div>
+            <div class="dilemma-body">
+              <p class="example-eyebrow">Ejemplo 2 · Algoritmo de salud, 2019</p>
+              <h3>El riesgo de un paciente calculado sin poder ver cómo</h3>
+              <h4>Qué pasó</h4>
+              <p>Hospitales de Estados Unidos usaban un algoritmo comercial para identificar a los pacientes que necesitaban atención adicional. El sistema asignaba a cada persona un puntaje de riesgo, y millones de decisiones se tomaban a partir de ese número.</p>
+              <details class="dilemma-more">
+                <summary>Por qué era una caja negra</summary>
+                <div class="dilemma-more-content">
+                  <p>El funcionamiento interno era <strong>propietario y opaco</strong>: los hospitales lo adoptaron sin comprender del todo qué medía en realidad. Solo cuando investigadores externos lo auditaron (estudio publicado en <em>Science</em>, 2019) se descubrió que el puntaje no medía la enfermedad, sino el <strong>gasto histórico en salud</strong> — y que, por eso, los pacientes negros debían estar más enfermos que los blancos para obtener el mismo nivel de riesgo.</p>
+                  <span class="dilemma-principle"><strong>El problema:</strong> nadie dentro del sistema podía explicar el puntaje, así que el error permaneció invisible mientras afectaba a millones de personas.</span>
+                </div>
+              </details>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="section" data-section="11" data-session="explicabilidad">
+        <p class="section-meta"><span class="session-tag">Explicabilidad y gobernanza</span> · Sección 11 de 13</p>
+        <h2>Ejercicio práctico</h2>
+
+        <div class="exercise-case">
+          <span class="exercise-case-icon" aria-hidden="true">⚡</span>
+          <p class="exercise-eyebrow">El caso · Empresa de energía eléctrica (CENS)</p>
+          <p class="exercise-case-text">“Una empresa de energía eléctrica usa un modelo de IA que analiza los consumos y marca automáticamente a ciertos usuarios con ‘consumo anómalo’, generando una orden de inspección por posible fraude. Un usuario afectado reclama y pregunta por qué fue señalado, pero nadie en la empresa puede explicarlo: la única respuesta disponible es que ‘el sistema lo detectó’, sin poder decir qué datos pesaron en esa decisión.”</p>
+        </div>
+
+        <div class="exercise-steps">
+          <div class="exercise-step">
+            <span class="exercise-step-num">1</span>
+            <p><strong>Identifica qué debería poder explicarse</strong> de esa decisión al usuario.</p>
+          </div>
+          <div class="exercise-step">
+            <span class="exercise-step-num">2</span>
+            <p><strong>Debate en grupo</strong> las preguntas que vienen a continuación.</p>
+          </div>
+          <div class="exercise-step">
+            <span class="exercise-step-num">3</span>
+            <p><strong>Propón las reglas de gobernanza</strong> que deberían rodear al modelo.</p>
+          </div>
+        </div>
+
+        <h3 class="exercise-questions-title">Preguntas para la audiencia</h3>
+        <div class="exercise-questions">
+          <div class="exercise-question">
+            <span class="exercise-question-num">1</span>
+            <p>¿Qué explicación mínima merece un usuario señalado por un algoritmo?</p>
+          </div>
+          <div class="exercise-question">
+            <span class="exercise-question-num">2</span>
+            <p>¿Puede la empresa actuar solo con el puntaje de la IA, sin revisión humana previa?</p>
+          </div>
+          <div class="exercise-question">
+            <span class="exercise-question-num">3</span>
+            <p>¿Quién responde si la IA se equivoca: la empresa, el proveedor del software o el funcionario que ejecuta la orden?</p>
+          </div>
+          <div class="exercise-question">
+            <span class="exercise-question-num">4</span>
+            <p>¿Qué debería quedar registrado para que la decisión se pueda auditar e impugnar?</p>
+          </div>
+        </div>
+
+        <div class="exercise-closing">
+          Una decisión que afecta un servicio esencial no puede sostenerse en un <strong>“el sistema lo dijo”</strong>: sin explicación no hay confianza, no hay defensa posible y no hay gobernanza.
+        </div>
+      </article>
+
+      <article class="section" data-section="12" data-session="conclusion">
+        <p class="section-meta"><span class="session-tag">Conclusiones</span> · Sección 12 de 13</p>
+        <h2>Conclusiones</h2>
+
+        <div class="exercise-questions">
+          <div class="exercise-question">
+            <span class="exercise-question-num">1</span>
+            <p><strong>Autonomía y dilemas.</strong> Delegar una decisión a una IA no delega la responsabilidad: ante valores en conflicto, los criterios los define —y los responde— una persona.</p>
+          </div>
+          <div class="exercise-question">
+            <span class="exercise-question-num">2</span>
+            <p><strong>Justicia y sesgos.</strong> Los algoritmos aprenden de un pasado desigual y pueden amplificarlo; la equidad se diseña, se mide y se audita desde los datos.</p>
+          </div>
+          <div class="exercise-question">
+            <span class="exercise-question-num">3</span>
+            <p><strong>Transparencia.</strong> Una decisión que nadie puede explicar no se puede impugnar ni corregir: el fin de la caja negra es un imperativo social.</p>
+          </div>
+          <div class="exercise-question">
+            <span class="exercise-question-num">4</span>
+            <p><strong>Gobernanza como base.</strong> Privacidad, responsabilidad corporativa y autodeterminación tecnológica sostienen una IA ética y segura.</p>
+          </div>
+        </div>
+
+        <div class="exercise-closing">
+          La tecnología dicta lo que <strong>podemos</strong> hacer. La ética y el derecho dictan lo que <strong>debemos</strong> hacer: somos los arquitectos de una IA al servicio de la humanidad.
+        </div>
+      </article>
+
+      <article class="section" data-section="13" data-session="conclusion">
+        <p class="section-meta"><span class="session-tag">Conclusiones</span> · Sección 13 de 13</p>
+        <h2>Universidad de los Andes</h2>
+      </article>
+
+      <div class="controls">
+        <button type="button" id="prevBtn">← Anterior</button>
+        <span class="progress" id="progress">1 / 13</span>
+        <button type="button" id="nextBtn">Siguiente →</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const SESSIONS = [
+      {
+        id: "portada",
+        label: "Portada",
+        sections: [
+          { n: 1, title: "Perfil del ponente" },
+          { n: 2, title: "Agenda / introducción" },
+        ],
+      },
+      {
+        id: "dilemas",
+        label: "Dilemas éticos",
+        sections: [
+          { n: 3, title: "¿Qué es un dilema ético?" },
+          { n: 4, title: "Ejemplos" },
+          { n: 5, title: "Ejercicio práctico" },
+        ],
+      },
+      {
+        id: "sesgo",
+        label: "Sesgo algorítmico",
+        sections: [
+          { n: 6, title: "Sesgo algorítmico" },
+          { n: 7, title: "Ejemplos" },
+          { n: 8, title: "Ejercicio práctico" },
+        ],
+      },
+      {
+        id: "explicabilidad",
+        label: "Explicabilidad y gobernanza",
+        sections: [
+          { n: 9, title: "Explicabilidad y gobernanza" },
+          { n: 10, title: "Ejemplos" },
+          { n: 11, title: "Ejercicio práctico" },
+        ],
+      },
+      {
+        id: "conclusion",
+        label: "Conclusiones",
+        sections: [
+          { n: 12, title: "Conclusiones" },
+          { n: 13, title: "Cierre" },
+        ],
+      },
+    ];
+
+    const TOTAL = 13;
+    let current = 1;
+
+    const nav = document.getElementById("nav");
+    const progress = document.getElementById("progress");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("overlay");
+    const menuToggle = document.getElementById("menuToggle");
+
+    function buildNav() {
+      const frag = document.createDocumentFragment();
+      SESSIONS.forEach((session) => {
+        const label = document.createElement("span");
+        label.className = "session-label";
+        label.textContent = session.label;
+        frag.appendChild(label);
+
+        session.sections.forEach((s) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "nav-item";
+          btn.dataset.section = String(s.n);
+          btn.innerHTML = `<span class="num">${s.n}.</span> ${s.title}`;
+          btn.addEventListener("click", () => {
+            goTo(s.n);
+            closeMenu();
+          });
+          frag.appendChild(btn);
+        });
+      });
+      nav.appendChild(frag);
+    }
+
+    function goTo(n) {
+      if (n < 1 || n > TOTAL) return;
+      current = n;
+
+      document.querySelectorAll(".section").forEach((el) => {
+        el.classList.toggle("active", Number(el.dataset.section) === current);
+      });
+
+      document.querySelectorAll(".nav-item").forEach((el) => {
+        el.classList.toggle("active", Number(el.dataset.section) === current);
+      });
+
+      const activeNav = document.querySelector(`.nav-item[data-section="${current}"]`);
+      if (activeNav) {
+        activeNav.scrollIntoView({ block: "nearest", behavior: "smooth" });
+      }
+
+      progress.textContent = `${current} / ${TOTAL}`;
+      prevBtn.disabled = current === 1;
+      nextBtn.disabled = current === TOTAL;
+
+      history.replaceState(null, "", `#seccion-${current}`);
+    }
+
+    function closeMenu() {
+      sidebar.classList.remove("open");
+      overlay.classList.remove("show");
+    }
+
+    function openMenu() {
+      sidebar.classList.add("open");
+      overlay.classList.add("show");
+    }
+
+    prevBtn.addEventListener("click", () => goTo(current - 1));
+    nextBtn.addEventListener("click", () => goTo(current + 1));
+
+    menuToggle.addEventListener("click", () => {
+      if (sidebar.classList.contains("open")) closeMenu();
+      else openMenu();
+    });
+    overlay.addEventListener("click", closeMenu);
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+        e.preventDefault();
+        goTo(current + 1);
+      } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+        e.preventDefault();
+        goTo(current - 1);
+      }
+    });
+
+    document.querySelectorAll("[data-goto]").forEach((el) => {
+      el.addEventListener("click", () => goTo(Number(el.dataset.goto)));
+    });
+
+    buildNav();
+
+    const hashMatch = location.hash.match(/seccion-(\d+)/);
+    const start = hashMatch ? Math.min(TOTAL, Math.max(1, Number(hashMatch[1]))) : 1;
+    goTo(start);
+  </script>
+</body>
+</html>
