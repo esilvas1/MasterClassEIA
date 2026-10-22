@@ -862,6 +862,59 @@
       .exercise-case-text { font-size: 1.18rem; }
     }
 
+    /* —— Imagen y logo del caso (Seccion 5) —— */
+    .substation {
+      margin: 1.5rem 0 1.25rem;
+      padding: 0;
+    }
+
+    .substation-media {
+      position: relative;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .substation-media > img {
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .substation-logo {
+      position: absolute;
+      right: 1rem;
+      bottom: 1rem;
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 0.7rem 1rem;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+      display: flex;
+      align-items: center;
+    }
+
+    .substation-logo img {
+      height: 74px;
+      width: auto;
+      max-width: 180px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .substation figcaption {
+      margin-top: 0.6rem;
+      font-size: 0.9rem;
+      color: var(--muted);
+      text-align: right;
+    }
+
+    @media (max-width: 700px) {
+      .substation-media > img { height: 210px; }
+      .substation-logo img { height: 54px; }
+    }
+
     /* —— Controles inferior —— */
     .controls {
       position: sticky;
@@ -989,7 +1042,7 @@
           </figure>
           <div class="profile-body">
             <h3>Formación</h3>
-            <p>Ingeniero de Sistemas, Especialista en Gestión y Evaluación de Proyectos de la <strong>Universidad Industrial de Santander (UIS)</strong> y Científico de Datos de la <strong>Pontificia Universidad Javeriana Cali</strong>.</p>
+            <p>Ingeniero de Sistemas, Especialista en Gestión y Evaluación de Proyectos de la <strong>Universidad Industrial de Santander (UIS)</strong> y Científico de Datos de la <strong>Pontificia Universidad Javeriana</strong>.</p>
             <p>Maestrante en Inteligencia Artificial de la <strong>Universidad de los Andes</strong>.</p>
             <h3>Trayectoria</h3>
             <p>Cuenta con más de 10 años de experiencia en gestión regulatoria, calidad del servicio, optimización de procesos mediante inteligencia artificial y desarrollo de aplicaciones en CENS S.A. E.S.P.</p>
@@ -1011,7 +1064,7 @@
           </div>
           <div class="academic-card">
             <div class="academic-logo"><img src="assets/logos/javeriana.png" alt="Logo de la Pontificia Universidad Javeriana" /></div>
-            <strong>Pontificia Universidad Javeriana Cali</strong>
+            <strong>Pontificia Universidad Javeriana</strong>
             <span>Científico de Datos</span>
           </div>
           <div class="academic-card">
@@ -1141,27 +1194,22 @@
 
       <article class="section" data-section="5" data-session="dilemas">
         <p class="section-meta"><span class="session-tag">Dilemas éticos</span> · Sección 5 de 13</p>
-        <h2>Ejercicio práctico</h2>
+        <h2>Dilema Ético: Plan de Inversiones Regulatoria (PIR) - CREG 015 de 2018</h2>
+
+        <figure class="substation">
+          <div class="substation-media">
+            <img src="assets/temas/cens-subestacion.jpg" alt="Equipo de CENS frente a la Subestación San Roque, en Norte de Santander" />
+            <div class="substation-logo">
+              <img src="assets/logos/creg.png" alt="Logo de la CREG - Comisión de Regulación de Energía y Gas" />
+            </div>
+          </div>
+          <figcaption>Equipo de CENS en la Subestación San Roque (Norte de Santander) · Plan de Inversiones Regulatoria PIR - CREG 015 de 2018</figcaption>
+        </figure>
 
         <div class="exercise-case">
           <span class="exercise-case-icon" aria-hidden="true">⚡</span>
-          <p class="exercise-eyebrow">El caso · CENS</p>
-          <p class="exercise-case-text">“Una IA identifica que las inversiones en zonas rurales generan poco retorno económico y recomienda reducirlas para invertir en zonas urbanas con mayor rentabilidad. La decisión mejora los indicadores financieros de la empresa, pero aumenta la brecha en la calidad del servicio entre las zonas urbanas y rurales.”</p>
-        </div>
-
-        <div class="exercise-steps">
-          <div class="exercise-step">
-            <span class="exercise-step-num">1</span>
-            <p><strong>Lee el caso</strong> e identifica la decisión que propone la IA.</p>
-          </div>
-          <div class="exercise-step">
-            <span class="exercise-step-num">2</span>
-            <p><strong>Debate en grupo</strong> las preguntas que vienen a continuación.</p>
-          </div>
-          <div class="exercise-step">
-            <span class="exercise-step-num">3</span>
-            <p><strong>Propón los principios</strong> que deberían guiar al algoritmo.</p>
-          </div>
+          <p class="exercise-eyebrow">El caso</p>
+          <p class="exercise-case-text">Una IA identifica que las inversiones en zonas rurales generan poco retorno económico y recomienda reducirlas para invertir en zonas urbanas con mayor rentabilidad. La decisión mejora los indicadores financieros de la empresa, pero aumenta la brecha en la calidad del servicio entre las zonas urbanas y rurales.</p>
         </div>
 
         <h3 class="exercise-questions-title">Preguntas para la audiencia</h3>
@@ -1217,7 +1265,7 @@
               <p class="example-eyebrow">Ejemplo 1 · Google Photos, 2015</p>
               <h3>Personas de color etiquetadas como simios</h3>
               <h4>Qué pasó</h4>
-              <p>El sistema de reconocimiento de imágenes de Google Photos etiquetó automáticamente las fotos de dos personas negras con la palabra <strong>“gorilas”</strong>. El error se hizo viral cuando una de las personas afectadas lo publicó, y Google tuvo que disculparse públicamente y retirar esa etiqueta de su sistema.</p>
+              <p>El sistema de reconocimiento de imágenes de Google Photos etiquetó automáticamente las fotos de dos personas de color con la palabra <strong>“gorilas”</strong>. El error se hizo viral cuando una de las personas afectadas lo publicó, y Google tuvo que disculparse públicamente y retirar esa etiqueta de su sistema.</p>
               <h4>Por qué ocurrió</h4>
               <p>El modelo se había entrenado con datos poco diversos y no se había probado lo suficiente con distintos tonos de piel: el algoritmo no “veía” a todas las personas con la misma precisión.</p>
               <span class="dilemma-principle"><strong>Lección:</strong> si los datos de entrenamiento no representan a toda la población, el sistema discrimina — aunque nadie lo haya programado para hacerlo.</span>
@@ -1243,27 +1291,19 @@
 
       <article class="section" data-section="8" data-session="sesgo">
         <p class="section-meta"><span class="session-tag">Sesgo algorítmico</span> · Sección 8 de 13</p>
-        <h2>Ejercicio práctico</h2>
+        <h2>Sesgo algorítmico · Reducción del indicador de cartera de CENS S.A. E.S.P.</h2>
+
+        <figure class="substation">
+          <div class="substation-media">
+            <img src="assets/temas/cens-atencion-usuarios.jpg" alt="Trabajadora de CENS atendiendo a usuarios en una oficina de atención al cliente" style="object-position: center 32%;" />
+          </div>
+          <figcaption>Atención a clientes y usuarios en una oficina de CENS · Imagen tomada de www.cens.com.co/clientes-y-usuarios</figcaption>
+        </figure>
 
         <div class="exercise-case">
           <span class="exercise-case-icon" aria-hidden="true">⚡</span>
-          <p class="exercise-eyebrow">El caso · Empresa de energía eléctrica (CENS)</p>
-          <p class="exercise-case-text">“Una empresa de energía eléctrica entrena un modelo de IA con su historial de pagos para predecir qué clientes tienen mayor riesgo de no pagar la factura. Como en los datos las zonas rurales y los barrios de estratos bajos registran más atrasos, el modelo aprende ese patrón y empieza a marcar automáticamente a esos usuarios como ‘alto riesgo’, priorizando los cortes del servicio y endureciendo las condiciones de financiación justo en las comunidades más vulnerables.”</p>
-        </div>
-
-        <div class="exercise-steps">
-          <div class="exercise-step">
-            <span class="exercise-step-num">1</span>
-            <p><strong>Identifica el origen</strong> del sesgo: ¿está en los datos, en el modelo o en su uso?</p>
-          </div>
-          <div class="exercise-step">
-            <span class="exercise-step-num">2</span>
-            <p><strong>Debate en grupo</strong> las preguntas que vienen a continuación.</p>
-          </div>
-          <div class="exercise-step">
-            <span class="exercise-step-num">3</span>
-            <p><strong>Propón salvaguardas</strong> para detectar y corregir el sesgo.</p>
-          </div>
+          <p class="exercise-eyebrow">El caso</p>
+          <p class="exercise-case-text">El equipo de facturación/cartera de CENS S.A. E.S.P. entrena un modelo de IA con su historial de pagos para predecir qué clientes tienen mayor riesgo de no pagar la factura. Como en los datos las zonas rurales y los barrios de estratos bajos registran más atrasos, el modelo aprende ese patrón y empieza a marcar automáticamente a esos usuarios como ‘alto riesgo’, priorizando los cortes del servicio y endureciendo las condiciones de financiación justo en las comunidades más vulnerables.</p>
         </div>
 
         <h3 class="exercise-questions-title">Preguntas para la audiencia</h3>
@@ -1359,21 +1399,6 @@
           <span class="exercise-case-icon" aria-hidden="true">⚡</span>
           <p class="exercise-eyebrow">El caso · Empresa de energía eléctrica (CENS)</p>
           <p class="exercise-case-text">“Una empresa de energía eléctrica usa un modelo de IA que analiza los consumos y marca automáticamente a ciertos usuarios con ‘consumo anómalo’, generando una orden de inspección por posible fraude. Un usuario afectado reclama y pregunta por qué fue señalado, pero nadie en la empresa puede explicarlo: la única respuesta disponible es que ‘el sistema lo detectó’, sin poder decir qué datos pesaron en esa decisión.”</p>
-        </div>
-
-        <div class="exercise-steps">
-          <div class="exercise-step">
-            <span class="exercise-step-num">1</span>
-            <p><strong>Identifica qué debería poder explicarse</strong> de esa decisión al usuario.</p>
-          </div>
-          <div class="exercise-step">
-            <span class="exercise-step-num">2</span>
-            <p><strong>Debate en grupo</strong> las preguntas que vienen a continuación.</p>
-          </div>
-          <div class="exercise-step">
-            <span class="exercise-step-num">3</span>
-            <p><strong>Propón las reglas de gobernanza</strong> que deberían rodear al modelo.</p>
-          </div>
         </div>
 
         <h3 class="exercise-questions-title">Preguntas para la audiencia</h3>
